@@ -139,7 +139,6 @@ def train_and_evaluate(model, epochs=500, lr=0.01):
             print(f"Epoch {epoch}: Test loss = {test_loss:.4f}")
     return test_losses
 
-# Initialisation des modèles
 models = {
     "1 couche cachée": ReseauNeurone_1_couches(),
     "2 couches cachées": ReseauNeurone_2_couches(),
@@ -148,14 +147,13 @@ models = {
     "10 couches cachées (Sigmoid)": ReseauNeurone_10_couches(),
 }
 
-# Entraînement et collecte des pertes
 results = {}
 for name, model in models.items():
     print(f"\n--- Entraînement du modèle avec {name} ---")
     losses = train_and_evaluate(model)
     results[name] = losses
 
-# Tracé des pertes
+#Graphs
 plt.figure(figsize=(10, 6))
 for name, losses in results.items():
     plt.plot(range(0, 500, 100), losses, label=name)
