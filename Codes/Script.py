@@ -95,3 +95,6 @@ subtilites.
 '''
 
 #Question 5
+'''
+Pour faciliter la lecture et la correction, je me suis permis d'écrire le code de la question 5 à part. Vous trouverez ce code ici : 
+'''
