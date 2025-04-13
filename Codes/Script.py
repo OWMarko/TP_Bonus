@@ -1,4 +1,8 @@
 import numpy as np
+import torch.nn as nn
+import torchvision
+import torch.utils.data as Data 
+import torch
 from sklearn import tree, datasets
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
@@ -48,12 +52,10 @@ class ReseauNeurone(nn.Module):
 input_dim = 4
 output_dim = 3
 model = ReseauNeurone(input_dim, output_dim)
-
 #Fonction perte
 loss_fn = nn.L1Loss()
-
 #Gradient stochastique (SGD)
-optimizer = optim.SGD(model.parameters(), lr=0.01)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
 
 X_train_tensor = torch.FloatTensor(X_train)
 #Pour que le format des étiquettes corresponde à celui de la sortie du réseau de neurones :
@@ -71,10 +73,25 @@ for epoch in range(epochs):
     if epoch % 100 == 0:
         print(f"Epoch {epoch}: loss = {loss.item()}")
 
-nn_loss = total_test_loss / N_test
-print("Fonction perte du réseau sur la base test :", nn_loss)
-
 #Question 4
-print("\nComparaison :")
-print(f"Arbre de décision : perte moyenne = {tree_loss:.4f}")
-print(f"Réseau de neurones : perte moyenne = {nn_loss:.4f}")
+model.eval()
+with torch.no_grad(): 
+    X_test_tensor = torch.FloatTensor(X_test)
+    y_test_onehot = np.eye(output_dim)[y_test]
+    y_test_tensor = torch.FloatTensor(y_test_onehot)
+    
+    outputs_test = model(X_test_tensor)
+    test_loss = loss_fn(outputs_test, y_test_tensor)
+
+nn_loss = test_loss.item()
+
+print(f"Arbre de decision : perte moyenne = {tree_loss:.4f}")
+print(f"Reseau de neurones : perte moyenne = {nn_loss:.4f}")
+
+'''
+Nous remarquons que la parte moyenne de l'arbre de decision est minime, 0.0200 comparé à la perte moyenne de notre reseau de neurones simple. Cette difference est
+du à la simplicite de notre reseau qui ne prend pas en compte, assez, des differentes subtilites dans les donnees alors que l'arbre de decision s'adapte aux differentes
+subtilites.
+'''
+
+#Question 5
