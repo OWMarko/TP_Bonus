@@ -55,10 +55,6 @@ loss_fn = nn.L1Loss()
 #Gradient stochastique (SGD)
 optimizer = optim.SGD(model.parameters(), lr=0.01)
 
-# Supposons que X_train et y_train soient définis :
-# X_train : matrice numpy de dimension (N_train x 4)
-# y_train : vecteur numpy des étiquettes (N_train,) avec des valeurs dans {0,1,2}
-
 X_train_tensor = torch.FloatTensor(X_train)
 #Pour que le format des étiquettes corresponde à celui de la sortie du réseau de neurones :
 y_train_onehot = np.eye(output_dim)[y_train]
