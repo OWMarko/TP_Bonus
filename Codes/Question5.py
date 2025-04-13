@@ -22,8 +22,19 @@ y_test_onehot = np.eye(output_dim)[y_test]
 y_train_tensor = torch.FloatTensor(y_train_onehot)
 y_test_tensor = torch.FloatTensor(y_test_onehot)
 
-#Nos réseaux
-class ReseauNeurone_1_couches(nn.Module):
+# Définition des réseaux
+class ReseauNeurone(nn.Module):  # Sans couche cachée
+    def __init__(self, input_dim, output_dim):
+        super(ReseauNeurone, self).__init__()
+        self.network = nn.Sequential(
+            nn.Linear(input_dim, output_dim),
+            nn.Softmax(dim=1)
+        )
+
+    def forward(self, x):
+        return self.network(x)
+
+class ReseauNeurone_1_couches(nn.Module):  # 1 couche cachée
     def __init__(self):
         super(ReseauNeurone_1_couches, self).__init__()
         self.network = nn.Sequential(
@@ -36,7 +47,7 @@ class ReseauNeurone_1_couches(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-class ReseauNeurone_2_couches(nn.Module):
+class ReseauNeurone_2_couches(nn.Module):  # 2 couches cachées
     def __init__(self):
         super(ReseauNeurone_2_couches, self).__init__()
         self.network = nn.Sequential(
@@ -51,7 +62,7 @@ class ReseauNeurone_2_couches(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-class ReseauNeurone_3_couches(nn.Module):
+class ReseauNeurone_3_couches(nn.Module):  # 3 couches cachées
     def __init__(self):
         super(ReseauNeurone_3_couches, self).__init__()
         self.network = nn.Sequential(
@@ -68,7 +79,7 @@ class ReseauNeurone_3_couches(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-class ReseauNeurone_4_couches(nn.Module):
+class ReseauNeurone_4_couches(nn.Module):  # 4 couches cachées
     def __init__(self):
         super(ReseauNeurone_4_couches, self).__init__()
         self.network = nn.Sequential(
@@ -87,7 +98,7 @@ class ReseauNeurone_4_couches(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-class ReseauNeurone_10_couches(nn.Module):
+class ReseauNeurone_10_couches(nn.Module):  # 10 couches cachées
     def __init__(self):
         super(ReseauNeurone_10_couches, self).__init__()
         self.network = nn.Sequential(
@@ -116,7 +127,7 @@ class ReseauNeurone_10_couches(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-#Entraînement
+# Fonction d'entraînement et d'évaluation
 def train_and_evaluate(model, epochs=500, lr=0.01):
     optimizer = optim.SGD(model.parameters(), lr=lr)
     loss_fn = nn.L1Loss()
@@ -139,7 +150,9 @@ def train_and_evaluate(model, epochs=500, lr=0.01):
             print(f"Epoch {epoch}: Test loss = {test_loss:.4f}")
     return test_losses
 
+# Ajout du réseau sans couche cachée au dictionnaire des modèles
 models = {
+    "Sans couche cachée": ReseauNeurone(input_dim, output_dim),
     "1 couche cachée": ReseauNeurone_1_couches(),
     "2 couches cachées": ReseauNeurone_2_couches(),
     "3 couches cachées": ReseauNeurone_3_couches(),
@@ -147,20 +160,20 @@ models = {
     "10 couches cachées (Sigmoid)": ReseauNeurone_10_couches(),
 }
 
+# Entraînement et collecte des pertes
 results = {}
 for name, model in models.items():
     print(f"\n--- Entraînement du modèle avec {name} ---")
     losses = train_and_evaluate(model)
     results[name] = losses
 
-#Graphs
+# Tracé des courbes de pertes
 plt.figure(figsize=(10, 6))
 for name, losses in results.items():
     plt.plot(range(0, 500, 100), losses, label=name)
-plt.xlabel("Nombre d'époques")
+plt.xlabel("Nombre d'epochs")
 plt.ylabel("Perte moyenne sur la base test")
 plt.title("Comparaison des pertes pour différents réseaux")
 plt.legend()
 plt.grid(True)
 plt.show()
-
