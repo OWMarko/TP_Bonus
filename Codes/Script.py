@@ -74,3 +74,12 @@ for epoch in range(epochs):
 
     if epoch % 100 == 0:
         print(f"Epoch {epoch}: loss = {loss.item()}")
+
+
+nn_loss = total_test_loss / N_test
+print("Fonction perte (Réseau de neurones) sur la base test :", nn_loss)
+
+#Question 4
+print("\nComparaison :")
+print(f"--> Arbre de décision : perte moyenne = {tree_loss:.4f}")
+print(f"--> Réseau de neurones : perte moyenne = {nn_loss:.4f}")
